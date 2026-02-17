@@ -384,25 +384,38 @@ footer{padding:40px 24px;border-top:1px solid var(–border);text-align:center;f
 
 <script>
 // ═══ EMAIL SIGNUP ═══
-const emails = [];
+const FORMSPREE = "https://formspree.io/f/mjgerqky";
 function handleSignup(e) {
   e.preventDefault();
   const input = e.target.querySelector('input');
   const email = input.value.trim();
   if (!email) return;
-  emails.push(email);
-  input.value = '';
-  // Update counter
-  const counter = document.getElementById('counter');
-  const num = parseInt(counter.textContent.replace(/,/g, '')) + 1;
-  counter.textContent = num.toLocaleString();
-  // Show toast
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
-  // In production: send to your backend/Supabase/Mailchimp
-  console.log('Email collected:', email);
-  console.log('All emails:', emails);
+  const btn = e.target.querySelector('button');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  fetch(FORMSPREE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ email: email, source: 'ScamShield Waitlist' })
+  }).then(r => {
+    if (r.ok) {
+      input.value = '';
+      const counter = document.getElementById('counter');
+      const num = parseInt(counter.textContent.replace(/,/g, '')) + 1;
+      counter.textContent = num.toLocaleString();
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+      btn.textContent = 'You\'re in! ✓';
+      setTimeout(() => { btn.textContent = 'Get Early Access →'; btn.disabled = false; }, 3000);
+    } else {
+      btn.textContent = 'Try again →';
+      btn.disabled = false;
+    }
+  }).catch(() => {
+    btn.textContent = 'Try again →';
+    btn.disabled = false;
+  });
 }
 
 // ═══ LIVE DEMO SCANNER ═══
