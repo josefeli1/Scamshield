@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScamShield AI — Stop Scammers in 14 Languages</title>
+<meta name="description" content="AI-powered scam detection and engagement platform. Protects you in 14 languages with real-time red flag analysis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050a08;--surface:#0a1510;--card:#0d1f17;--border:#1a3328;
+  --emerald:#34d399;--emerald-dim:#10b981;--emerald-glow:rgba(52,211,153,.12);
+  --cyan:#22d3ee;--red:#f87171;--amber:#fbbf24;--violet:#a78bfa;
+  --text:#e2e8f0;--muted:#64748b;--faint:#334155;
+  --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+a{color:var(--emerald);text-decoration:none}
+
+/* ═══ AMBIENT EFFECTS ═══ */
+.glow-orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:.5}
+.orb-1{width:600px;height:600px;background:radial-gradient(circle,rgba(16,185,129,.15),transparent);top:-200px;left:-100px}
+.orb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(34,211,238,.08),transparent);top:200px;right:-150px}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,rgba(167,139,250,.06),transparent);bottom:100px;left:30%}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(52,211,153,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(52,211,153,.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 50% at 50% 30%,black,transparent)}
+
+/* ═══ NAV ═══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;background:rgba(5,10,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(26,51,40,.5);transition:all .3s}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:900;font-size:20px;letter-spacing:-.5px;color:var(–emerald);display:flex;align-items:center;gap:8px}
+.logo-badge{font-size:9px;background:var(–emerald-glow);border:1px solid rgba(52,211,153,.3);padding:2px 8px;border-radius:20px;font-weight:600;letter-spacing:1px;color:var(–emerald)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{color:var(–muted);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(–emerald)}
+.nav-cta{background:var(–emerald-dim);color:var(–bg);font-weight:700;font-size:13px;padding:8px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;font-family:var(–font)}
+.nav-cta:hover{background:var(–emerald);transform:translateY(-1px)}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;overflow:hidden}
+.hero-content{position:relative;z-index:2;max-width:800px}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(–emerald-glow);border:1px solid rgba(52,211,153,.2);padding:6px 18px;border-radius:100px;margin-bottom:28px;font-size:13px;color:var(–emerald);font-weight:500;animation:fadeInDown .8s ease}
+.hero-pill .dot{width:6px;height:6px;border-radius:50%;background:var(–emerald);animation:pulse 2s infinite}
+.hero h1{font-size:clamp(42px,7vw,80px);font-weight:900;line-height:1.05;letter-spacing:-2px;margin-bottom:20px;animation:fadeInUp .8s ease .1s both}
+.hero h1 .accent{background:linear-gradient(135deg,var(–emerald),var(–cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{font-size:clamp(16px,2vw,20px);color:var(–muted);max-width:560px;margin:0 auto 36px;line-height:1.7;font-weight:300;animation:fadeInUp .8s ease .2s both}
+.hero .sub strong{color:var(–emerald);font-weight:600}
+
+/* Signup form */
+.signup-form{display:flex;gap:10px;max-width:480px;margin:0 auto 32px;animation:fadeInUp .8s ease .3s both}
+.signup-form input{flex:1;padding:14px 20px;border-radius:12px;border:1px solid var(–border);background:var(–surface);color:var(–text);font-size:15px;font-family:var(–font);outline:none;transition:border .2s}
+.signup-form input:focus{border-color:var(–emerald)}
+.signup-form input::placeholder{color:var(–faint)}
+.signup-form button{padding:14px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,var(–emerald-dim),#059669);color:white;font-weight:700;font-size:15px;cursor:pointer;font-family:var(–font);white-space:nowrap;transition:all .2s;box-shadow:0 0 30px rgba(16,185,129,.2)}
+.signup-form button:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(16,185,129,.35)}
+
+.social-proof{display:flex;align-items:center;justify-content:center;gap:16px;animation:fadeInUp .8s ease .4s both}
+.avatars{display:flex}
+.avatars span{width:32px;height:32px;border-radius:50%;border:2px solid var(–bg);margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:14px;background:var(–card)}
+.avatars span:first-child{margin-left:0}
+.social-proof p{font-size:13px;color:var(–muted)}
+.social-proof p strong{color:var(–emerald)}
+
+/* ═══ LANGUAGE BAR ═══ */
+.lang-bar{padding:40px 24px;background:var(–surface);border-top:1px solid var(–border);border-bottom:1px solid var(–border);overflow:hidden}
+.lang-track{display:flex;gap:16px;animation:scroll 30s linear infinite;width:max-content}
+.lang-chip{display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;background:var(–card);border:1px solid var(–border);white-space:nowrap;font-size:14px;font-weight:500;transition:all .3s;flex-shrink:0}
+.lang-chip:hover{border-color:var(–emerald);background:var(–emerald-glow)}
+
+/* ═══ FEATURES ═══ */
+.features{padding:120px 24px;position:relative}
+.features-inner{max-width:1100px;margin:0 auto}
+.section-label{font-size:12px;font-weight:700;color:var(–emerald);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;text-align:center}
+.section-title{font-size:clamp(32px,4vw,48px);font-weight:900;text-align:center;letter-spacing:-1px;margin-bottom:16px}
+.section-sub{text-align:center;color:var(–muted);font-size:16px;max-width:560px;margin:0 auto 60px;font-weight:300}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.feature-card{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:32px;transition:all .3s;position:relative;overflow:hidden}
+.feature-card:hover{border-color:rgba(52,211,153,.3);transform:translateY(-4px)}
+.feature-card::before{content:’’;position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(–emerald),var(–cyan));opacity:0;transition:opacity .3s}
+.feature-card:hover::before{opacity:1}
+.feature-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.feature-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.feature-card p{color:var(–muted);font-size:14px;line-height:1.7}
+.fi-emerald{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2)}
+.fi-cyan{background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2)}
+.fi-violet{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2)}
+.fi-amber{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2)}
+.fi-red{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2)}
+.fi-pink{background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.2)}
+
+/* ═══ LIVE DEMO ═══ */
+.demo{padding:120px 24px;background:var(–surface);border-top:1px solid var(–border);position:relative}
+.demo-inner{max-width:900px;margin:0 auto}
+.demo-window{background:var(–bg);border:1px solid var(–border);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.demo-bar{background:var(–card);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(–border)}
+.demo-dot{width:10px;height:10px;border-radius:50%}
+.demo-bar-text{font-size:12px;color:var(–faint);margin-left:8px;font-family:var(–mono)}
+.demo-body{padding:24px;min-height:300px;font-family:var(–mono);font-size:13px;line-height:1.8}
+.demo-line{opacity:0;animation:typeIn .4s ease forwards;margin-bottom:6px}
+.demo-flag{display:inline-flex;align-items:center;gap:4px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);padding:2px 10px;border-radius:6px;font-size:11px;color:var(–red);margin:2px}
+.demo-safe{display:inline-flex;align-items:center;gap:4px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);padding:2px 10px;border-radius:6px;font-size:11px;color:var(–emerald);margin:2px}
+.demo-input-area{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(–border)}
+.demo-input{flex:1;background:var(–card);border:1px solid var(–border);border-radius:8px;padding:10px 16px;color:var(–text);font-family:var(–mono);font-size:13px;outline:none}
+.demo-input:focus{border-color:var(–emerald)}
+.demo-btn{background:var(–emerald-dim);color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(–font);font-size:13px;transition:all .2s}
+.demo-btn:hover{background:var(–emerald)}
+
+/* ═══ PERSONAS ═══ */
+.personas{padding:120px 24px;position:relative}
+.personas-inner{max-width:1100px;margin:0 auto}
+.persona-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.persona-card{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:24px;display:flex;gap:16px;transition:all .3s}
+.persona-card:hover{border-color:rgba(52,211,153,.3);transform:translateY(-2px)}
+.persona-avatar{font-size:40px;line-height:1}
+.persona-card h3{font-size:16px;font-weight:700;margin-bottom:2px}
+.persona-card .age{font-size:12px;color:var(–muted);margin-bottom:6px}
+.persona-card p{font-size:13px;color:var(–muted);line-height:1.5}
+
+/* ═══ STATS ═══ */
+.stats{padding:80px 24px;background:var(–surface);border-top:1px solid var(–border);border-bottom:1px solid var(–border)}
+.stats-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.stat-num{font-size:clamp(36px,5vw,56px);font-weight:900;background:linear-gradient(135deg,var(–emerald),var(–cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:4px}
+.stat-label{font-size:13px;color:var(–muted);font-weight:500}
+
+/* ═══ HOW IT WORKS ═══ */
+.how{padding:120px 24px;position:relative}
+.how-inner{max-width:900px;margin:0 auto}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:24px;padding:32px 0;position:relative}
+.step:not(:last-child){border-bottom:1px solid var(–border)}
+.step-num{width:48px;height:48px;border-radius:50%;background:var(–emerald-glow);border:2px solid rgba(52,211,153,.3);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(–emerald);flex-shrink:0}
+.step h3{font-size:18px;font-weight:700;margin-bottom:6px}
+.step p{color:var(–muted);font-size:14px;line-height:1.7}
+
+/* ═══ CTA ═══ */
+.cta{padding:120px 24px;text-align:center;position:relative;overflow:hidden}
+.cta-inner{max-width:600px;margin:0 auto;position:relative;z-index:2}
+.cta h2{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-1px;margin-bottom:16px}
+.cta p{color:var(–muted);font-size:16px;margin-bottom:36px;font-weight:300}
+
+/* ═══ FOOTER ═══ */
+footer{padding:40px 24px;border-top:1px solid var(–border);text-align:center;font-size:13px;color:var(–faint)}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes typeIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(–emerald-dim);color:white;padding:14px 28px;border-radius:12px;font-weight:600;font-size:14px;z-index:200;transition:transform .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 10px 40px rgba(16,185,129,.3)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px){
+.nav-links{display:none}
+.signup-form{flex-direction:column}
+.stats-inner{grid-template-columns:repeat(2,1fr)}
+.step{flex-direction:column;gap:12px}
+.features-grid{grid-template-columns:1fr}
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAV -->
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      🛡️ ScamShield <span class="logo-badge">AI</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#demo">Live Demo</a>
+      <a href="#personas">AI Agents</a>
+      <a href="#how">How It Works</a>
+      <button class="nav-cta" onclick="document.getElementById('hero-email').focus()">Get Early Access</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="grid-bg"></div>
+  <div class="hero-content">
+    <div class="hero-pill">
+      <span class="dot"></span>
+      Launching Soon — Join the Waitlist
+    </div>
+    <h1>Stop Scammers.<br><span class="accent">In Any Language.</span></h1>
+    <p class="sub">AI-powered scam detection across <strong>14 languages</strong>. Our AI agents engage scammers in real-time, wasting their time so they can't target real victims.</p>
+    <form class="signup-form" onsubmit="handleSignup(event)">
+      <input type="email" id="hero-email" placeholder="Enter your email" required>
+      <button type="submit">Get Early Access →</button>
+    </form>
+    <div class="social-proof">
+      <div class="avatars">
+        <span>👩</span><span>👨</span><span>👵</span><span>🧑</span><span>👴</span>
+      </div>
+      <p><strong id="counter">2,847</strong> people on the waitlist</p>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGE BAR -->
+
+<div class="lang-bar">
+  <div class="lang-track" id="langTrack">
+    <div class="lang-chip">🇺🇸 English</div>
+    <div class="lang-chip">🇪🇸 Español</div>
+    <div class="lang-chip">🇫🇷 Français</div>
+    <div class="lang-chip">🇧🇷 Português</div>
+    <div class="lang-chip">🇩🇪 Deutsch</div>
+    <div class="lang-chip">🇨🇳 中文</div>
+    <div class="lang-chip">🇸🇦 العربية</div>
+    <div class="lang-chip">🇮🇳 हिन्दी</div>
+    <div class="lang-chip">🇷🇺 Русский</div>
+    <div class="lang-chip">🇯🇵 日本語</div>
+    <div class="lang-chip">🇰🇷 한국어</div>
+    <div class="lang-chip">🇮🇹 Italiano</div>
+    <div class="lang-chip">🇹🇷 Türkçe</div>
+    <div class="lang-chip">🇰🇪 Kiswahili</div>
+    <!-- Duplicate for seamless scroll -->
+    <div class="lang-chip">🇺🇸 English</div>
+    <div class="lang-chip">🇪🇸 Español</div>
+    <div class="lang-chip">🇫🇷 Français</div>
+    <div class="lang-chip">🇧🇷 Português</div>
+    <div class="lang-chip">🇩🇪 Deutsch</div>
+    <div class="lang-chip">🇨🇳 中文</div>
+    <div class="lang-chip">🇸🇦 العربية</div>
+    <div class="lang-chip">🇮🇳 हिन्दी</div>
+    <div class="lang-chip">🇷🇺 Русский</div>
+    <div class="lang-chip">🇯🇵 日本語</div>
+    <div class="lang-chip">🇰🇷 한국어</div>
+    <div class="lang-chip">🇮🇹 Italiano</div>
+    <div class="lang-chip">🇹🇷 Türkçe</div>
+    <div class="lang-chip">🇰🇪 Kiswahili</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="section-label">What You Get</div>
+    <div class="section-title">Fight Back Against Fraud</div>
+    <p class="section-sub">Every tool you need to detect, analyze, and waste scammers' time — powered by AI that speaks their language.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon fi-emerald">🔍</div>
+        <h3>78 Red Flag Patterns</h3>
+        <p>Instant detection across 7 threat categories: financial theft, identity theft, pressure tactics, impersonation, emotional manipulation, and more.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-cyan">🤖</div>
+        <h3>AI Scam Engagement</h3>
+        <p>Deploy AI personas that waste scammers' time with hilariously realistic conversations. Every minute wasted protects real victims.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-violet">🌍</div>
+        <h3>14 Languages</h3>
+        <p>Auto-detects language and scans in English, Spanish, French, Portuguese, Chinese, Arabic, Hindi, Russian, Japanese, Korean, and more.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-amber">👥</div>
+        <h3>Community Database</h3>
+        <p>Crowd-sourced scam reports from around the world. Vote, search, and contribute. Together we build the world's largest scam database.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-red">🧩</div>
+        <h3>Browser Extension</h3>
+        <p>Scans your emails, DMs, and social messages in real-time. Instant popup alerts when something looks suspicious.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-pink">📊</div>
+        <h3>Safety Reports</h3>
+        <p>Weekly digests showing scams blocked, time saved, and trending threats in your area. Know what to watch for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DEMO -->
+
+<section class="demo" id="demo">
+  <div class="demo-inner">
+    <div class="section-label">See It In Action</div>
+    <div class="section-title">Try The Live Scanner</div>
+    <p class="section-sub">Paste any suspicious message below and watch ScamShield analyze it in real-time.</p>
+    <div class="demo-window">
+      <div class="demo-bar">
+        <div class="demo-dot" style="background:#ff5f57"></div>
+        <div class="demo-dot" style="background:#febc2e"></div>
+        <div class="demo-dot" style="background:#28c840"></div>
+        <span class="demo-bar-text">ScamShield Analyzer v4</span>
+      </div>
+      <div class="demo-body" id="demoBody">
+        <div style="color:var(--faint);text-align:center;padding:40px 0;">Paste a message below to scan it</div>
+      </div>
+      <div class="demo-input-area" style="padding:0 24px 24px">
+        <input class="demo-input" id="demoInput" placeholder="Paste a suspicious message..." value="Congratulations! You won $1,000,000. Send your bank account details urgently to claim your prize.">
+        <button class="demo-btn" onclick="runDemo()">Scan →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONAS -->
+
+<section class="personas" id="personas">
+  <div class="personas-inner">
+    <div class="section-label">AI Agents</div>
+    <div class="section-title">6 Personas. Infinite Chaos.</div>
+    <p class="section-sub">Each AI agent has a unique personality designed to waste scammers' time in the most entertaining way possible.</p>
+    <div class="persona-grid">
+      <div class="persona-card"><div class="persona-avatar">👵</div><div><h3>Edna Mae</h3><div class="age">78 years old</div><p>Sweet, confused grandma who rambles endlessly about her cat Whiskers, casserole recipes, and neighbor gossip.</p></div></div>
+      <div class="persona-card"><div class="persona-avatar">👨‍🔧</div><div><h3>Duke Rawlings</h3><div class="age">65 years old</div><p>Retired mechanic who questions every detail, compares everything to cars, and tells endless Army stories.</p></div></div>
+      <div class="persona-card"><div class="persona-avatar">👩‍💼</div><div><h3>Priya Sharma</h3><div class="age">42 years old</div><p>Wannabe investor who enthusiastically agrees to everything but hilariously misunderstands all financial concepts.</p></div></div>
+      <div class="persona-card"><div class="persona-avatar">👨‍💻</div><div><h3>Bob Robertson</h3><div class="age">55 years old</div><p>IT professional who pretends to be clueless. Claims his screen shows absurd errors and needs help fixing his printer.</p></div></div>
+      <div class="persona-card"><div class="persona-avatar">👑</div><div><h3>Lady Margaret</h3><div class="age">82 years old</div><p>British aristocrat with immense wealth who becomes outraged at small fees while casually discussing millions.</p></div></div>
+      <div class="persona-card"><div class="persona-avatar">🧔</div><div><h3>Kevin Murphy</h3><div class="age">34 years old</div><p>Eager but spectacularly incompetent. Agrees to everything then does it all hilariously wrong.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+
+<section class="stats">
+  <div class="stats-inner">
+    <div><div class="stat-num">78</div><div class="stat-label">Red Flag Patterns</div></div>
+    <div><div class="stat-num">14</div><div class="stat-label">Languages</div></div>
+    <div><div class="stat-num">6</div><div class="stat-label">AI Personas</div></div>
+    <div><div class="stat-num">$0</div><div class="stat-label">To Get Started</div></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="section-label">Simple Setup</div>
+    <div class="section-title">How It Works</div>
+    <p class="section-sub">Three steps to protect yourself and waste scammers' precious time.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><h3>Paste the Scam Message</h3><p>Got a suspicious email, text, or DM? Paste it into ScamShield. Our engine auto-detects the language and scans for 78 known scam patterns across 7 threat categories.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div><h3>See Red Flags Instantly</h3><p>Within seconds, you'll see every red flag — color-coded by severity (critical, high, medium). Each flag includes an educational tip explaining why it's a scam indicator.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div><h3>Deploy an AI Agent</h3><p>Choose a persona and let our AI engage the scammer in their own language. Watch as Edna rambles about her cat or Duke questions every detail. Every minute wasted protects real victims.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+
+<section class="cta">
+  <div class="glow-orb orb-3"></div>
+  <div class="cta-inner">
+    <div class="section-label">Join the Movement</div>
+    <h2>Be the First to <span style="color:var(--emerald)">Fight Back</span></h2>
+    <p>Join thousands who are taking a stand against scammers. Get early access — free forever for early adopters.</p>
+    <form class="signup-form" onsubmit="handleSignup(event)">
+      <input type="email" placeholder="Enter your email" required>
+      <button type="submit">Join Waitlist →</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 ScamShield AI. Protecting people in 14 languages. Built with ❤️ and Claude.</p>
+</footer>
+
+<!-- TOAST -->
+
+<div class="toast" id="toast">✅ You're on the list! We'll notify you at launch.</div>
+
+<script>
+// ═══ EMAIL SIGNUP ═══
+const emails = [];
+function handleSignup(e) {
+  e.preventDefault();
+  const input = e.target.querySelector('input');
+  const email = input.value.trim();
+  if (!email) return;
+  emails.push(email);
+  input.value = '';
+  // Update counter
+  const counter = document.getElementById('counter');
+  const num = parseInt(counter.textContent.replace(/,/g, '')) + 1;
+  counter.textContent = num.toLocaleString();
+  // Show toast
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+  // In production: send to your backend/Supabase/Mailchimp
+  console.log('Email collected:', email);
+  console.log('All emails:', emails);
+}
+
+// ═══ LIVE DEMO SCANNER ═══
+const FLAGS = [
+  { re: /bank.*(detail|account|number)/i, f: "🏦 Bank details request", s: "critical" },
+  { re: /(won|winner|lottery|prize|jackpot|congratulat)/i, f: "🎰 Fake prize/lottery", s: "critical" },
+  { re: /(urgent|immediate|right\s*now|asap)/i, f: "⏰ False urgency", s: "high" },
+  { re: /(send|wire|transfer)\s*(money|fund|\$|payment)/i, f: "💸 Money transfer", s: "critical" },
+  { re: /(million|thousand)\s*(dollar|pound|euro|\$)/i, f: "💰 Unrealistic amount", s: "high" },
+  { re: /(password|login|credential|pin)/i, f: "🔑 Credential theft", s: "critical" },
+  { re: /(social\s*security|ssn)/i, f: "🆔 SSN request", s: "critical" },
+  { re: /(click|tap|open)\s*(this|the|my)?\s*(link|url)/i, f: "🔗 Suspicious link", s: "medium" },
+  { re: /(gift\s*card)/i, f: "🎁 Gift card scam", s: "critical" },
+  { re: /(arrest|warrant|jail|police)/i, f: "👮 Legal threats", s: "high" },
+  { re: /(crypto|bitcoin|btc|ethereum)/i, f: "₿ Crypto scheme", s: "high" },
+  { re: /(100%|guaranteed|risk.?free)/i, f: "✨ Unrealistic guarantee", s: "high" },
+  { re: /(verify|confirm)\s*(your|the)?\s*(identity|account)/i, f: "🎭 Identity phishing", s: "high" },
+  { re: /(ganador|premio|loter[ií]a|felicitaciones)/i, f: "🇪🇸 Premio falso", s: "high" },
+  { re: /(gagnant|gagn[eé]|prix|loterie)/i, f: "🇫🇷 Faux prix", s: "high" },
+  { re: /(ganhador|pr[eê]mio|sorteio|parab[eé]ns)/i, f: "🇧🇷 Prêmio falso", s: "high" },
+  { re: /(\u4E2D\u5956|\u5956\u54C1|\u606D\u559C)/i, f: "🇨🇳 虚假奖品", s: "high" },
+  { re: /(\u0641\u0627\u0626\u0632|\u062C\u0627\u0626\u0632\u0629|\u0645\u0628\u0631\u0648\u0643)/i, f: "🇸🇦 جائزة مزيفة", s: "high" },
+  { re: /(\u0935\u093F\u091C\u0947\u0924\u093E|\u0932\u0949\u091F\u0930\u0940|\u092C\u0927\u093E\u0908)/i, f: "🇮🇳 झूठा इनाम", s: "high" },
+  { re: /(\u043F\u043E\u0431\u0435\u0434\u0438\u0442\u0435\u043B\u044C|\u043F\u0440\u0438\u0437|\u043B\u043E\u0442\u0435\u0440\u0435\u044F)/i, f: "🇷🇺 Ложный приз", s: "high" },
+];
+
+function runDemo() {
+  const input = document.getElementById('demoInput').value;
+  if (!input.trim()) return;
+  const body = document.getElementById('demoBody');
+  const matched = FLAGS.filter(f => f.re.test(input));
+  const score = matched.reduce((s, f) => s + (f.s === 'critical' ? 30 : f.s === 'high' ? 20 : 10), 0);
+  const level = score >= 60 ? 'DEFINITE SCAM' : score >= 30 ? 'HIGHLY SUSPICIOUS' : score >= 10 ? 'SUSPICIOUS' : 'LOW RISK';
+  const levelColor = score >= 60 ? 'var(--red)' : score >= 30 ? 'var(--amber)' : score >= 10 ? '#fb923c' : 'var(--emerald)';
+  
+  body.innerHTML = '';
+  const lines = [
+    { html: `<span style="color:var(--muted)">Scanning message...</span>`, d: 0 },
+    { html: `<span style="color:var(--emerald)">✓ Language detected</span>`, d: 400 },
+    { html: `<span style="color:var(--emerald)">✓ ${matched.length} red flag${matched.length !== 1 ? 's' : ''} found</span>`, d: 800 },
+    { html: `<br><span style="font-size:16px;font-weight:700;color:${levelColor}">⬤ ${level}</span> <span style="color:var(--muted)">| Risk score: ${score}</span>`, d: 1200 },
+  ];
+  matched.forEach((f, i) => {
+    const cls = f.s === 'critical' ? 'demo-flag' : f.s === 'high' ? 'demo-flag' : 'demo-flag';
+    lines.push({ html: `<span class="${cls}">${f.f}</span>`, d: 1500 + i * 200 });
+  });
+  if (matched.length === 0) {
+    lines.push({ html: `<br><span class="demo-safe">✓ No red flags detected — still exercise caution</span>`, d: 1500 });
+  }
+  lines.push({ html: `<br><span style="color:var(--muted);font-size:12px">Analysis complete. ${matched.length} pattern${matched.length !== 1 ? 's' : ''} matched across 7 threat categories.</span>`, d: 1800 + matched.length * 200 });
+  
+  lines.forEach(line => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'demo-line';
+      div.innerHTML = line.html;
+      body.appendChild(div);
+      body.scrollTop = body.scrollHeight;
+    }, line.d);
+  });
+}
+
+// ═══ SCROLL ANIMATIONS ═══
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.feature-card, .persona-card, .step, .stat-num').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+
+// Auto-run demo on load
+setTimeout(() => {
+  if (document.getElementById('demoInput').value) runDemo();
+}, 2000);
+</script>
+
+</body>
+</html>
